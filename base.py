@@ -22,9 +22,9 @@ def search_graph():
     # SPARQL query executed on endpoint
     # {query_parameter} is replaced by the term entered into the interface
     #query_person=input("who?: ")
-    print("This is going to allow you to find all the people born within a specified time frame")
-    startDate=input("Enter the start date: ")
-    #endDate=input("Enter the end date: ")
+    print("This is going to allow you to find all the people born within a specified time frame are their respective death dates")
+    startDate=input("Enter the start date of the timeframe: ")
+    endDate=input("Enter the end date of the time frame: ")
     sparql_query = """
    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -33,7 +33,7 @@ PREFIX crm: <http://erlangen-crm.org/current/>
 PREFIX vt: <https://kb.virtualtreasury.ie/>
 PREFIX vt_ont: <https://ont.virtualtreasury.ie/ontology#>
 
-select distinct ?person_name ?start_date 
+select distinct ?person_name ?birth_date ?death_date
 
 where {
                      #Get Birth and Death events and time-spans for each person
@@ -45,10 +45,10 @@ where {
                      crm:P93_took_out_of_existence ?person.
 
                      #Get begin-of-the-begin of Birth as start date and end-of-the-end of Death as end date
-                     ?timespanB crm:P82a_begin_of_the_begin ?start_date.
-                     ?timespanD crm:P82b_end_of_the_end ?end_date.
-                     FILTER (?start_date > "%s"^^xsd:date).
-                     FILTER (?start_date <= "1610-01-01"^^xsd:date).
+                     ?timespanB crm:P82a_begin_of_the_begin ?birth_date.
+                     ?timespanD crm:P82b_end_of_the_end ?death_date.
+                     FILTER (?birth_date > "%s"^^xsd:date).
+                     FILTER (?birth_date <= "%s"^^xsd:date).
 
 
                      #Get appellation (surname-forename) of person
@@ -58,8 +58,8 @@ where {
 FILTER(CONTAINS(str(?appellation),"normalized-appellation-surname-forename")).
                  }
                  ORDER BY ?start_date
-limit 50
-    """%startDate
+limit 20
+    """%(startDate, endDate)
    # sparql_query = sparql_query.replace("{query_parameter}", query_parameter.lower())
     table_rows = {}
     try:

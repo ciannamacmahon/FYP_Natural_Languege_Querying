@@ -6,7 +6,7 @@ def main():
 
     #stopWords.remove('when')
 
-    doc=nlp("Apple sells an iphone for $1 biliion")
+    doc=nlp("where does Barack Obama live")
     
     list_charc=[]
     for token in doc: 
@@ -31,7 +31,12 @@ def main():
     # Apple= ORG (organisation)
     # 1= Money
     for ent in doc.ents:
-        print(ent.text,"description: ",ent.label_)
+        print(ent.text,"Entity Description: ",ent.label_)
+    
+    #chunk.root.dep describes the relationship from the root to the head
+    for chunk in doc.noun_chunks:
+        print(chunk.text,  chunk.root.dep_,
+            chunk.root.head.text, "end")
 
 if __name__ == '__main__':
     main()

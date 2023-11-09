@@ -58,7 +58,7 @@ where {
 FILTER(CONTAINS(str(?appellation),"normalized-appellation-surname-forename")).
                  }
                  ORDER BY ?start_date
-limit 20
+limit 50
     """%(startDate, endDate)
    # sparql_query = sparql_query.replace("{query_parameter}", query_parameter.lower())
     table_rows = {}

@@ -3,7 +3,18 @@ import os
 from dotenv import load_dotenv
 from SPARQLWrapper import SPARQLWrapper, JSON
 
+cidocDict=[
+    {}
+]
+personFinder={}
+personFinder['name']="crm:P1_is_identified_by"
+personFinder['readable']="rdfs:label"
+cidocDict.append(personFinder)
 
+deathChar={}
+deathChar["class"]= "crm:E69_Death"
+deathChar["deathDate"]=" crm:P4_has_time-span X crm:P7_took_place_at X"
+deathChar["deathPlace"]
 
 def load_api_keys():
     load_dotenv()
@@ -36,30 +47,16 @@ PREFIX vt_ont: <https://ont.virtualtreasury.ie/ontology#>
 select distinct ?person_name ?birth_date ?death_date
 
 where {
-                     #Get Birth and Death events and time-spans for each person
-                     ?birth rdf:type crm:E67_Birth;
-                     crm:P4_has_time-span ?timespanB;
-                     crm:P98_brought_into_life ?person.
-                     ?death rdf:type crm:E69_Death;
-                     crm:P4_has_time-span ?timespanD;
-                     crm:P93_took_out_of_existence ?person.
+?person crm:{personFinder['name']}
+}
 
-                     #Get begin-of-the-begin of Birth as start date and end-of-the-end of Death as end date
-                     ?timespanB crm:P82a_begin_of_the_begin ?birth_date.
-                     ?timespanD crm:P82b_end_of_the_end ?death_date.
-                     FILTER (?birth_date > "%s"^^xsd:date).
-                     FILTER (?birth_date <= "%s"^^xsd:date).
-
-
-                     #Get appellation (surname-forename) of person
-                     ?person crm:P1_is_identified_by ?appellation.
-                     ?appellation rdfs:label ?person_name.
+                    
 
 FILTER(CONTAINS(str(?appellation),"normalized-appellation-surname-forename")).
                  }
                  ORDER BY ?start_date
 limit 50
-    """%(startDate, endDate)
+    """
    # sparql_query = sparql_query.replace("{query_parameter}", query_parameter.lower())
     table_rows = {}
     try:

@@ -1,0 +1,25 @@
+who:
+#Get appellation (surname-forename) of person
+                     ?person crm:P1_is_identified_by ?appellation.
+                     ?appellation rdfs:label ?person_name.
+
+
+query struture:
+subject , predicate, object
+class (noun)       cidoc      property (verb)
+
+who was: select distinc ?person_name ?deathDate/birthDate
+when was x Born?
+- birth
+
+?birth rdf:type crm:E67_Birth
+?birth crm:P4_has_time-span ?timeSpan
+?birth crm:P98_brought_into_life ?person.
+?timeSpan crm:P82a_begin_of_the_begin ?birthDate.
+
+when did x die?
+
+?death rdf:type crm:E69_Death.
+?death crm:P4_has_time-span ?timespanD.
+?death crm:P93_took_out_of_existence ?person.
+?timeSpan crm:P82b_end_of_the_end ?deathDate.

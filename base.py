@@ -11,10 +11,11 @@ personFinder['name']="crm:P1_is_identified_by"
 personFinder['readable']="rdfs:label"
 cidocDict.append(personFinder)
 
-deathChar={}
-deathChar["class"]= "crm:E69_Death"
+bearChar={}
+bearChar["class"]= "crm:E67_Birth"
+bearChar["properties"]="crm:P4_has_time-span ?X, crm:P98_brought_into_life ?person. ?X crm:P82a_begin_of_the_begin ?Y"
 deathChar["deathDate"]=" crm:P4_has_time-span X crm:P7_took_place_at X"
-deathChar["deathPlace"]
+deathChar["deathPlace"]=""
 
 def load_api_keys():
     load_dotenv()
@@ -34,7 +35,7 @@ def search_graph():
     # {query_parameter} is replaced by the term entered into the interface
     #query_person=input("who?: ")
     print("This is going to allow you to find all the people born within a specified time frame are their respective death dates")
-    startDate=input("Enter the start date of the timeframe: ")
+    startDate=input("Enter the name date of the timeframe: ")
     endDate=input("Enter the end date of the time frame: ")
     sparql_query = """
    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -44,19 +45,42 @@ PREFIX crm: <http://erlangen-crm.org/current/>
 PREFIX vt: <https://kb.virtualtreasury.ie/>
 PREFIX vt_ont: <https://ont.virtualtreasury.ie/ontology#>
 
-select distinct ?person_name ?birth_date ?death_date
+#people born in year X
+select distinct ?person_name ?birth_date 
 
 where {
-?person crm:{personFinder['name']}
-}
+                     #Get Birth and Death events and time-spans for each person
+                     ?birth rdf:type crm:E67_Birth;
+                     crm:P4_has_time-span ?timespanB;
+                     crm:P98_brought_into_life ?person.
+                     ?timespanB crm:P82a_begin_of_the_begin X.
 
-                    
+
+
+                     ?death rdf:type crm:E69_Death;
+                     crm:P4_has_time-span ?timespanD;
+                     crm:P93_took_out_of_existence ?person.
+
+                     #Get begin-of-the-begin of Birth as start date and end-of-the-end of Death as end date
+                     ?timespanB crm:P82a_begin_of_the_begin ?birth_date.
+                     FILTER (?birth_date = "%s"^^xsd:date).
+
+
+                     #Get appellation (surname-forename) of person
+                     ?person crm:P1_is_identified_by ?appellation.
+                     ?appellation rdfs:label ?person_name.
 
 FILTER(CONTAINS(str(?appellation),"normalized-appellation-surname-forename")).
                  }
                  ORDER BY ?start_date
 limit 50
+    """%(startDate)
+
+
+    endSPARQLFilter="""
+        FILTER(?birthDate= {birth})
     """
+
    # sparql_query = sparql_query.replace("{query_parameter}", query_parameter.lower())
     table_rows = {}
     try:

@@ -5,7 +5,7 @@ def main():
     nlp= spacy.load("en_core_web_sm")
     #stopWords.remove('when')
 
-    doc=nlp("When did Michael Jackson die")
+    doc=nlp("Who was born in 1600?")
     questionWord=""
     
     list_charc=[]
@@ -16,7 +16,8 @@ def main():
         if token.tag_ == "WP" or token.tag_ == "WP$" or token.tag_ == "WRB":
             questionWord=token.text
         characteristics["The simple UPOS part-of-speech-tag"]=token.pos_   
-        characteristics[ "Relationship between tokens"]=token.dep_    
+        characteristics[ "Relationship between tokens"]=token.dep_  
+        characteristics["lemma"]=token.lemma_ 
         characteristics["useless word"]=token.is_stop    
  
         list_charc.append(characteristics)
@@ -33,24 +34,26 @@ def main():
     # "Apple sells an iphone for $1 biliion"
     # Apple= ORG (organisation)
     # 1= Money
+    filterOption=""
     for ent in doc.ents:
         print(ent.text,"Entity Description: ",ent.label_)
+        filterOption=ent.text
     
     #chunk.root.dep describes the relationship from the root to the head
     for chunk in doc.noun_chunks:
         print(chunk.text,  chunk.root.dep_,"Relationship: ",
             chunk.root.head.text, "end")
-        findingCIDOCNotation(chunk.root.head.text)
+        findingCIDOCNotation(ent.label, chunk.root.head.text)
 
-def findingCIDOCNotation(query):
-    x=query
+def findingCIDOCNotation(querysubject,queryObject):
+    x="birthdate"
 
     url="https://lov.linkeddata.es/dataset/lov/api/v2/term/search?q={}&vocab=ecrm".format(x)
     print(url)
     response=requests.get(url)
     if response.status_code==200:
         data=response.json()
-
+ 
         # formatting
         if 'results' in data:
             results=data['results']

@@ -4,7 +4,7 @@ import json
 def main():
     testList=[]
     findingCIDOCNotation(testList)
-
+ 
 def findingCIDOCNotation(list):
     response=requests.get("https://lov.linkeddata.es/dataset/lov/api/v2/term/search?q=birth&vocab=crm")
     if response.status_code==200:

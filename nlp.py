@@ -1,14 +1,23 @@
-import spacy
+import spacy 
+from spacy import displacy
 import requests
 import json
-def main():
+
+
+def NLPProcess(userQuery):
     nlp= spacy.load("en_core_web_sm")
     #stopWords.remove('when')
 
-    doc=nlp("Who was born in 1600?")
+    doc=nlp(userQuery)
     questionWord=""
+    root=""
+    rootLemma=""
+    verb=""
+    verbLemma=""
+    noun=""
+    nounLemma=""
     
-    list_charc=[]
+    input_char=[]
     for token in doc: 
         characteristics={}   
         characteristics["word"]=token.text   
@@ -16,14 +25,30 @@ def main():
         if token.tag_ == "WP" or token.tag_ == "WP$" or token.tag_ == "WRB":
             questionWord=token.text
         characteristics["The simple UPOS part-of-speech-tag"]=token.pos_   
+        if token.pos_=="VERB":
+            verb=token.text
+            verbLemma=token.lemma_
+        elif token.pos_=="NOUN":
+            noun=token.text
+            nounLemma=token.lemma_
+
         characteristics[ "Relationship between tokens"]=token.dep_  
-        characteristics["lemma"]=token.lemma_ 
+        if token.dep_== "ROOT":
+            root=token.text
+            rootLemma=token.lemma_
+
+        #characteristics["lemma"]=token.lemma_ 
         characteristics["useless word"]=token.is_stop    
  
-        list_charc.append(characteristics)
+        input_char.append(characteristics)
        # print(token.text, token.tag_,token.pos_,token.lemma_,token.is_stop)
-    
-    print("List of charactertistics associated with each word in sentance: ", list_charc)
+    breakdown=[
+        {"Root":root, "Lemma":rootLemma},
+        {"Verb": verb,"Lemma":verbLemma},
+        {"Noun":noun,"Lemma":nounLemma},
+        {"Question": questionWord}
+    ]
+    print("List of charactertistics associated with each word in sentance: ", breakdown)
 
     #sentence without the useless/filler words ie.is,the,and
     fileterToekns=[token.text for token in doc if not token.is_stop]
@@ -43,8 +68,35 @@ def main():
     for chunk in doc.noun_chunks:
         print(chunk.text,  chunk.root.dep_,"Relationship: ",
             chunk.root.head.text, "end")
-        findingCIDOCNotation(ent.label, chunk.root.head.text)
+        #findingCIDOCNotation(ent.label, chunk.root.head.text)
 
+def depParsing(doc):
+  #  sentence=input("whats you question? ")
+    print ("{:<15} | {:<8} | {:<15} | {:<20}".format('Token','Relation','Head', 'Children'))
+    print ("-" * 70)
+
+    for token in doc:
+    # Print the token, dependency nature, head and all dependents of the token
+        print ("{:<15} | {:<8} | {:<15} | {:<20}"
+            .format(str(token.text), str(token.dep_), str(token.head.text), str([child for child in token.children])))
+  
+    # Use displayCy to visualize the dependency 
+    displacy.render(doc, style='dep', jupyter=False, options={'distance': 120})
+
+
+def main():
+    global userQuestion
+    global input_char
+    nlp= spacy.load("en_core_web_sm")
+    #stopWords.remove('when')
+
+    userQuestion=input("Please enter your query")
+    doc=nlp(userQuestion)
+    depParsing(doc)
+
+    #NLPProcess(userQuestion)
+
+    
 def findingCIDOCNotation(querysubject,queryObject):
     x="birthdate"
 

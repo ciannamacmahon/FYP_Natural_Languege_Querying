@@ -1,1 +1,0 @@
-# FYP_Natural_Languege_Querying

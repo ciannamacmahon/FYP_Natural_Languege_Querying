@@ -72,13 +72,13 @@ def NLPProcess(userQuery):
 
 def depParsing(doc):
   #  sentence=input("whats you question? ")
-    print ("{:<15} | {:<8} | {:<15} | {:<20}".format('Token','Relation','Head', 'Children'))
+    print ("{:<15} | {:<8} |{:<8}| {:<15} | {:<20}".format('Token','Type','Relation','Head', 'Children'))
     print ("-" * 70)
 
     for token in doc:
     # Print the token, dependency nature, head and all dependents of the token
-        print ("{:<15} | {:<8} | {:<15} | {:<20}"
-            .format(str(token.text), str(token.dep_), str(token.head.text), str([child for child in token.children])))
+        print ("{:<15} |{:<8} | {:<8} | {:<15} | {:<20}"
+            .format(str(token.text), str(token.pos_),str(token.dep_), str(token.head.text), str([child for child in token.children])))
   
     # Use displayCy to visualize the dependency 
     displacy.render(doc, style='dep', jupyter=False, options={'distance': 120})

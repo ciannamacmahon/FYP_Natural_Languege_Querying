@@ -71,17 +71,69 @@ def NLPProcess(userQuery):
         #findingCIDOCNotation(ent.label, chunk.root.head.text)
 
 def depParsing(doc):
+    char=[]
+    
+    
   #  sentence=input("whats you question? ")
     print ("{:<15} | {:<8} |{:<8}| {:<15} | {:<20}".format('Token','Type','Relation','Head', 'Children'))
     print ("-" * 70)
 
+    fileterToekns=[token.text for token in doc if not token.is_stop]
+    print(fileterToekns)
+
+    for ent in doc.ents:
+        print(ent.text,"Entity Description: ",ent.label_)
+
+    for chunk in doc.noun_chunks:
+        print(chunk.text,  chunk.root.dep_,"Relationship: ",
+            chunk.root.head.text, "end")
+
     for token in doc:
+        word={}
     # Print the token, dependency nature, head and all dependents of the token
         print ("{:<15} |{:<8} | {:<8} | {:<15} | {:<20}"
             .format(str(token.text), str(token.pos_),str(token.dep_), str(token.head.text), str([child for child in token.children])))
+        word["word"]=token.text 
+        word["relation"]=token.dep_
+        char.append(word)
   
     # Use displayCy to visualize the dependency 
-    displacy.render(doc, style='dep', jupyter=False, options={'distance': 120})
+    #displacy.serve(doc, style='dep', options={'distance': 130})
+    print(char)
+    tripleExtraction(char)
+
+def tripleExtraction(char):
+    subject=[]
+    predicate=[]
+    object=[]
+
+    for prop in char:
+        text=prop["word"]
+        relation=prop["relation"]
+
+        #nominal sentence- statement sentence (she is happy)
+        if "nsubj" in relation:
+            print("test")
+            if "dobj" in relation:
+                subject.append(text)
+                predicate.append("prep")
+                object.append("dobj")
+            elif "pobj" in relation:
+                subject.append(text)
+                predicate.append("prep")
+                object.append("pobj")
+            else:
+                subject.append(text)
+                predicate.append("prep")
+                object.append("xcomp")
+
+            print("Subject: ", subject, "Predicate: ", predicate, "Object: ",object)
+
+        #passive sentence- fpcuses on the action happening to the noun/subject (The cake is baked by adam)
+        elif "nsubjpass" in relation:
+            subject.append("agent")
+            predicate.append("root")
+            object.append("nsubjpass")
 
 
 def main():

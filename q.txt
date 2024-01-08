@@ -1,0 +1,54 @@
+Show me all Persons
+Count all Persons
+Show me the names of Persons
+Count the number of names of Persons
+Show the types of names of Persons
+Count the types of names of Persons
+Count the number of Persons with names by type of name
+Show me the identifiers of Persons
+Count the number of identifiers for Persons
+Show the types of identifiers of Persons
+Count the types of identifiers of Persons
+Count the number of Persons with identifiers by type of identifer
+Show me the types of Person
+Count the types of Person
+Count the number of Persons by type
+Show me the Persons with birth information
+Show me the Persons with birth type information
+Count the number of Persons with birth information
+Show the birth types
+Count the birth types
+Show me the Persons with birth location information
+Count the Persons with birth location data
+Count the Persons by birth locations
+Show Persons with birth timespan information
+Count the Persons with birth timespan information
+Show the Persons with earliest birth timespan information
+Count the Persons with earliest birth timespan information
+Show the Persons with latest birth timespan information
+Count the Persons with latest birth timespan information
+Show me Persons with timespans with vebatim dates
+Count me Persons with timespans with verbatim dates
+Show me Persons with births fall within a period
+Count me Persons with births that fall within a period
+Show me the Persons with death information
+Count the Persons with death information
+Show me the death locations of Persons
+Count the number of Persons with death locations
+Count the number of Persons with deaths at different locations
+Show Persons with death timespan information
+Count the Persons with death timespan information
+Show the Persons with earliest death timespan information
+Count the Persons with earliest death timespan information
+Show the Persons with latest death timespan information
+Count the Persons with latest death timespan information
+Show me Persons with timespans with vebatim dates
+Count me Persons with timespans with verbatim dates
+Show me Persons with deaths fall within a period
+Show me the groups of which Persons are members
+Count the number of Persons who are members of groups
+Count the number of Persons that have statements about them
+Count the number of Persons that have statements about them by type of statement
+Show me Persons and the statements about them
+Show me the Persons with authority record
+Count the Persons with authority records

@@ -260,3 +260,28 @@ if __name__ == '__main__':
 
     ans =  rdf.answer
     print ans
+
+
+nlp = stanza.Pipeline('en',processors='tokenize,pos,lemma,depparse,natlog,openie')
+
+def extract_openie_triples(question):
+    # Process the question with CoreNLP
+    doc = nlp(question)
+
+    # Extract OpenIE triples
+    triples = []
+    for sentence in doc.sentences:
+        for triple in sentence.openie_triples:
+            triples.append(triple)
+
+    return triples
+
+# Example question
+question = "Who is the president of the United States?"
+
+# Extract OpenIE triples
+openie_triples = extract_openie_triples(question)
+
+# Print the extracted triples
+for triple in openie_triples:
+    print(triple)
